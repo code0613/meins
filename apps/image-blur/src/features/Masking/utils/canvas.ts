@@ -17,10 +17,6 @@ function getContext(canvas: HTMLCanvasElement) {
   return ctx;
 }
 
-/**
- * 이미지 전체를 블록 단위 평균색으로 덮어 모자이크판을 만든다.
- * 블록마다 getImageData를 부르면 호출 비용이 커서, 전체를 한 번만 읽고 배열에서 계산한다.
- */
 function createMosaicCanvas(image: HTMLImageElement, width: number, height: number, blockSize: number) {
   const canvas = createCanvas(width, height);
   const ctx = getContext(canvas);
@@ -68,16 +64,12 @@ function createMosaicCanvas(image: HTMLImageElement, width: number, height: numb
   return canvas;
 }
 
-/**
- * 이미지 전체에 블러를 먹인 판을 만든다.
- * 가장자리가 투명하게 번지지 않도록 캔버스를 여유 있게 잡고 그린 뒤 원래 크기로 잘라낸다.
- */
 function createBlurCanvas(image: HTMLImageElement, width: number, height: number, radius: number) {
   const padding = Math.ceil(radius * 2);
   const padded = createCanvas(width + padding * 2, height + padding * 2);
   const paddedCtx = getContext(padded);
 
-  // 가장자리 픽셀을 바깥으로 늘려 깔아두면 블러가 투명색을 빨아들이지 않는다
+  // 여백 없이 그리면 블러가 캔버스 밖 투명색을 빨아들여 테두리가 흐려진다
   paddedCtx.drawImage(image, 0, 0, width, height, 0, 0, padded.width, padded.height);
   paddedCtx.filter = `blur(${radius}px)`;
   paddedCtx.drawImage(image, 0, 0, width, height, padding, padding, width, height);
@@ -88,10 +80,6 @@ function createBlurCanvas(image: HTMLImageElement, width: number, height: number
   return canvas;
 }
 
-/**
- * 원본을 참조하지 않고 단색으로만 채운 판.
- * 모자이크·블러와 달리 원본 픽셀에서 파생된 값이 전혀 남지 않아 복원이 불가능하다.
- */
 function createFillCanvas(width: number, height: number) {
   const canvas = createCanvas(width, height);
   const ctx = getContext(canvas);
@@ -114,7 +102,6 @@ export function createEffectCanvas(
   return createBlurCanvas(image.element, image.width, image.height, Math.max(1, intensity));
 }
 
-/** 스트로크가 덮는 영역만 흰색으로 칠한 판. 효과판을 오려낼 틀로 쓴다. */
 function createStrokeMaskCanvas(stroke: Stroke, width: number, height: number) {
   const canvas = createCanvas(width, height);
   const ctx = getContext(canvas);
@@ -155,10 +142,6 @@ function createStrokeMaskCanvas(stroke: Stroke, width: number, height: number) {
   return canvas;
 }
 
-/**
- * 효과판에서 스트로크 영역만 오려 대상 캔버스 위에 얹는다.
- * 원본 픽셀을 직접 뭉개지 않고 덮어쓰기만 하므로, 스트로크 목록만 되돌리면 원본이 그대로 살아난다.
- */
 export function composeStroke(
   targetCtx: CanvasRenderingContext2D,
   effectCanvas: HTMLCanvasElement,
@@ -175,10 +158,6 @@ export function composeStroke(
   targetCtx.drawImage(mask, 0, 0);
 }
 
-/**
- * 화면 좌표를 원본 이미지 좌표로 옮긴다.
- * 캔버스는 CSS로 줄여 보여주므로 표시 크기와 실제 픽셀 크기의 비율을 곱해야 한다.
- */
 export function toImagePoint(canvas: HTMLCanvasElement, clientX: number, clientY: number): Point {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -190,10 +169,6 @@ export function toImagePoint(canvas: HTMLCanvasElement, clientX: number, clientY
   };
 }
 
-/**
- * 브러시 굵기를 이미지 크기에 맞춰 보정한다.
- * 기준 폭 1000px에서 정해둔 굵기가 4000px 사진에서 실오라기처럼 보이는 걸 막는다.
- */
 export function scaleThickness(baseThickness: number, imageWidth: number) {
   const REFERENCE_WIDTH = 1000;
   return Math.max(6, (baseThickness * imageWidth) / REFERENCE_WIDTH);

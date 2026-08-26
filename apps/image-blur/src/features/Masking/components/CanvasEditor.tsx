@@ -1,4 +1,3 @@
-import { BORDER, SLATE } from '@meins/styles';
 import { Box, Typography } from '@mui/material';
 
 
@@ -34,9 +33,9 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
           display: 'flex',
           justifyContent: 'center',
           p: { xs: '12px', md: '20px' },
-          borderRadius: '14px',
-          bgcolor: SLATE[100],
-          border: `1px solid ${BORDER}`,
+          borderRadius: 'var(--radius)',
+          bgcolor: 'var(--muted)',
+          border: '1px solid var(--border)',
         }}
       >
         <Box
@@ -48,18 +47,17 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
           onPointerCancel={handlePointerUp}
           sx={{
             maxWidth: '100%',
-            // 세로로 긴 사진이 화면을 넘기지 않도록 뷰포트 기준으로 제한한다
             maxHeight: '70vh',
             objectFit: 'contain',
             borderRadius: '8px',
             cursor: isDrawing ? 'grabbing' : 'crosshair',
-            // 손가락으로 끌 때 화면이 같이 스크롤되면 그림이 그려지지 않는다
+            // 없으면 모바일에서 화면이 함께 스크롤돼 획이 그려지지 않는다
             touchAction: 'none',
           }}
         />
       </Box>
 
-      <Typography variant="body3" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+      <Typography variant="body3" sx={{ color: 'var(--muted-foreground)', textAlign: 'center' }}>
         가리고 싶은 부분을 마우스로 문지르거나 드래그하세요. 되돌리기는 최근 10단계까지 가능해요.
       </Typography>
     </Box>

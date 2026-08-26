@@ -13,7 +13,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ theme }) =>
     borderRadius: 10,
 
     color: theme.palette.text.primary,
-    backgroundColor: SLATE[100],
+    backgroundColor: SLATE[90],
 
     '&-error svg': {
       color: theme.palette.error.main,

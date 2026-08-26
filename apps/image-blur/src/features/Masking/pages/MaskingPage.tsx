@@ -9,46 +9,81 @@ export function MaskingPage() {
   const { image, isLoading, loadFromList, clear } = useImageLoader();
 
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
-      <Stack spacing="28px">
-        <Stack spacing="12px" alignItems="flex-start">
+    <>
+      <Box
+        component="header"
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          borderBottom: '1px solid var(--border)',
+          backdropFilter: 'blur(8px)',
+          bgcolor: 'color-mix(in oklab, var(--background) 80%, transparent)',
+        }}
+      >
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap',
+            py: '12px',
+          }}
+        >
+          <Typography variant="heading3" sx={{ color: 'var(--foreground)' }}>
+            {SERVICE_NAME}
+          </Typography>
           <SecurityNotice variant="header" />
+        </Container>
+      </Box>
 
+      <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
+        <Stack spacing="28px">
           <Box>
-            <Typography variant="display2" sx={{ color: 'text.primary' }}>
-              {SERVICE_NAME}
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary', mt: '6px' }}>
-              사진 속 이름, 주민번호, 주소를 문질러 가리세요. 사진은 이 브라우저를 벗어나지 않습니다.
-            </Typography>
-          </Box>
-        </Stack>
-
-        {image ? (
-          <Stack spacing="16px">
-            <Box
+            <Typography
+              variant="display2"
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px',
-                flexWrap: 'wrap',
+                color: 'var(--foreground)',
+                fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
+                lineHeight: 1.35,
+                whiteSpace: 'nowrap',
               }}
             >
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                {image.baseName} · {image.width} × {image.height}
-              </Typography>
-              <Button color="inherit" startIcon={<RestartAltIcon />} onClick={clear}>
-                다른 사진 열기
-              </Button>
-            </Box>
+              가릴 부분만 문지르세요
+            </Typography>
+            <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
+              모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
+            </Typography>
+          </Box>
 
-            <CanvasEditor image={image} />
-          </Stack>
-        ) : (
-          <ImageUploader isLoading={isLoading} onSelectFiles={loadFromList} />
-        )}
-      </Stack>
-    </Container>
+          {image ? (
+            <Stack spacing="16px">
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: 'var(--muted-foreground)' }}>
+                  {image.baseName} · {image.width} × {image.height}
+                </Typography>
+                <Button variant="outlined" startIcon={<RestartAltIcon />} onClick={clear}>
+                  다른 사진 열기
+                </Button>
+              </Box>
+
+              <CanvasEditor image={image} />
+            </Stack>
+          ) : (
+            <ImageUploader isLoading={isLoading} onSelectFiles={loadFromList} />
+          )}
+        </Stack>
+      </Container>
+    </>
   );
 }
