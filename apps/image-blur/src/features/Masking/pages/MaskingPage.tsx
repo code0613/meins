@@ -51,10 +51,10 @@ export function MaskingPage() {
                 whiteSpace: 'nowrap',
               }}
             >
-              사진 속 개인정보, 여기서 가리세요
+              가릴 부분만 문지르세요
             </Typography>
             <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
-              이름, 주민번호, 주소를 문질러 지우면 됩니다.
+              모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
             </Typography>
           </Box>
 

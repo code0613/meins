@@ -61,7 +61,7 @@ export function ImageUploader({ isLoading, onSelectFiles }: ImageUploaderProps) 
           가릴 사진을 여기에 놓아주세요
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          주민등록증, 영수증, 등본처럼 개인정보가 담긴 사진을 안전하게 가릴 수 있어요
+          주민등록증이나 영수증은 물론, 가리고 싶은 건 무엇이든 안전하게 덮을 수 있어요
         </Typography>
       </Box>
 
