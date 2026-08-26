@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 
-import { BORDER, INDIGO, SLATE } from '@meins/styles';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
@@ -43,9 +42,10 @@ export function ImageUploader({ isLoading, onSelectFiles }: ImageUploaderProps) 
         gap: '20px',
         px: '24px',
         py: { xs: '48px', md: '72px' },
-        borderRadius: '16px',
-        border: `2px dashed ${isDragging ? INDIGO[40] : BORDER}`,
-        bgcolor: isDragging ? 'rgba(99, 102, 241, 0.08)' : 'background.paper',
+        borderRadius: 'var(--radius)',
+        border: '2px dashed',
+        borderColor: isDragging ? 'var(--primary)' : 'var(--border)',
+        bgcolor: isDragging ? 'color-mix(in oklab, var(--primary) 6%, var(--card))' : 'var(--card)',
         transition: 'border-color 160ms ease, background-color 160ms ease',
         textAlign: 'center',
       }}
@@ -53,7 +53,7 @@ export function ImageUploader({ isLoading, onSelectFiles }: ImageUploaderProps) 
       {isLoading ? (
         <CircularProgress size={36} />
       ) : (
-        <CloudUploadOutlinedIcon sx={{ width: 44, height: 44, color: SLATE[40] }} />
+        <CloudUploadOutlinedIcon sx={{ width: 44, height: 44, color: 'var(--muted-foreground)' }} />
       )}
 
       <Box>

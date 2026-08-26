@@ -25,7 +25,7 @@ const BRUSH_SIZES = Object.keys(BRUSH_THICKNESS) as BrushSize[];
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
-      <Typography variant="label2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="label2" sx={{ color: 'var(--muted-foreground)' }}>
         {label}
       </Typography>
       {children}
@@ -51,9 +51,9 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
         alignItems: { xs: 'stretch', lg: 'flex-end' },
         gap: '20px',
         p: '16px',
-        borderRadius: '14px',
-        bgcolor: 'background.paper',
-        border: theme => `1px solid ${theme.palette.divider}`,
+        borderRadius: 'var(--radius)',
+        bgcolor: 'var(--card)',
+        border: '1px solid var(--border)',
       }}
     >
       <Field label="가리는 방식">
@@ -140,7 +140,7 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
         </Field>
       ) : (
         <Field label="가리는 강도">
-          <Typography variant="body4" sx={{ color: 'text.disabled', minWidth: { lg: 160 } }}>
+          <Typography variant="body4" sx={{ color: 'var(--muted-foreground)', minWidth: { lg: 160 } }}>
             채우기는 세기 조절이 없습니다
           </Typography>
         </Field>

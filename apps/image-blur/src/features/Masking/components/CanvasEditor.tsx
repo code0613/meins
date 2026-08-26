@@ -1,4 +1,3 @@
-import { BORDER, SLATE } from '@meins/styles';
 import { Box, Typography } from '@mui/material';
 
 
@@ -34,9 +33,9 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
           display: 'flex',
           justifyContent: 'center',
           p: { xs: '12px', md: '20px' },
-          borderRadius: '14px',
-          bgcolor: SLATE[100],
-          border: `1px solid ${BORDER}`,
+          borderRadius: 'var(--radius)',
+          bgcolor: 'var(--muted)',
+          border: '1px solid var(--border)',
         }}
       >
         <Box
@@ -59,7 +58,7 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
         />
       </Box>
 
-      <Typography variant="body3" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+      <Typography variant="body3" sx={{ color: 'var(--muted-foreground)', textAlign: 'center' }}>
         가리고 싶은 부분을 마우스로 문지르거나 드래그하세요. 되돌리기는 최근 10단계까지 가능해요.
       </Typography>
     </Box>
