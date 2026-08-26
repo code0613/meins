@@ -16,7 +16,8 @@ const CONTENT_SECURITY_POLICY = [
   // 사용자가 고른 사진은 blob:, 저장 직전 결과는 data:로 다룬다
   "img-src 'self' blob: data:",
   "font-src 'self'",
-  "connect-src 'none'",
+  // Vercel Web Analytics가 같은 오리진의 /_vercel/insights로 수집 요청을 보낸다
+  "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'none'",
