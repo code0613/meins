@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 
 
 function ErrorFallback() {
@@ -35,7 +36,15 @@ function App() {
       }}
     >
       <ErrorBoundary fallbackRender={ErrorFallback}>
-        <Outlet />
+        <Suspense
+          fallback={
+            <Stack alignItems="center" justifyContent="center" sx={{ minHeight: '100vh' }}>
+              <CircularProgress />
+            </Stack>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </ErrorBoundary>
     </Box>
   );
