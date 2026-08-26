@@ -42,16 +42,16 @@ export function MaskingPage() {
 
       <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
         <Stack spacing="28px">
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-              gap: '16px',
-              flexWrap: 'wrap',
-            }}
-          >
-            <Box>
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                flexWrap: 'wrap',
+              }}
+            >
               <Typography
                 variant="display2"
                 sx={{
@@ -63,12 +63,13 @@ export function MaskingPage() {
               >
                 가릴 부분만 문지르세요
               </Typography>
-              <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
-                모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
-              </Typography>
+
+              <BuyMeCoffeeButton />
             </Box>
 
-            <BuyMeCoffeeButton />
+            <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
+              모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
+            </Typography>
           </Box>
 
           {image ? (
