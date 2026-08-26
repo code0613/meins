@@ -43,7 +43,15 @@ export function MaskingPage() {
       <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
         <Stack spacing="28px">
           <Box>
-            <Typography variant="display2" sx={{ color: 'var(--foreground)' }}>
+            <Typography
+              variant="display2"
+              sx={{
+                color: 'var(--foreground)',
+                fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
+                lineHeight: 1.35,
+                whiteSpace: 'nowrap',
+              }}
+            >
               사진 속 개인정보, 여기서 가리세요
             </Typography>
             <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
