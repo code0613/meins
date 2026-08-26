@@ -106,17 +106,28 @@ export function BuyMeCoffeeButton() {
             ))}
           </Stack>
 
-          <Typography
-            variant="body4"
-            sx={{
-              display: 'block',
-              textAlign: 'center',
-              color: 'var(--muted-foreground)',
-              mt: '24px',
-            }}
-          >
-            QR을 찍으면 송금 화면이 열려요. 안 보내셔도 괜찮아요.
-          </Typography>
+          <Stack spacing="4px" sx={{ mt: '24px' }}>
+            <Typography
+              variant="body4"
+              sx={{
+                display: 'block',
+                textAlign: 'center',
+                color: 'var(--muted-foreground)',
+              }}
+            >
+              QR을 찍으면 송금 화면이 열려요. 안 보내셔도 괜찮아요.
+            </Typography>
+            <Typography
+              variant="body4"
+              sx={{
+                display: 'block',
+                textAlign: 'center',
+                color: 'var(--muted-foreground)',
+              }}
+            >
+              감사합니다.
+            </Typography>
+          </Stack>
         </DialogContent>
       </Dialog>
     </>
