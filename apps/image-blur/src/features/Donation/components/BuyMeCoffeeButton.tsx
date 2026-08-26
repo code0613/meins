@@ -24,7 +24,6 @@ export function BuyMeCoffeeButton() {
         onClick={handleOpen}
         sx={{
           flexShrink: 0,
-          ml: 'auto',
           whiteSpace: 'nowrap',
           color: 'var(--primary)',
           bgcolor: 'color-mix(in oklab, var(--primary) 12%, var(--card))',

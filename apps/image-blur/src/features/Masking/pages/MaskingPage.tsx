@@ -42,34 +42,48 @@ export function MaskingPage() {
 
       <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
         <Stack spacing="28px">
-          <Box>
-            <Box
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              columnGap: '16px',
+              rowGap: '6px',
+            }}
+          >
+            <Typography
+              variant="display2"
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px',
-                flexWrap: 'wrap',
+                order: 1,
+                color: 'var(--foreground)',
+                fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
+                lineHeight: 1.35,
+                whiteSpace: 'nowrap',
               }}
             >
-              <Typography
-                variant="display2"
-                sx={{
-                  color: 'var(--foreground)',
-                  fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
-                  lineHeight: 1.35,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                가릴 부분만 문지르세요
-              </Typography>
+              가릴 부분만 문지르세요
+            </Typography>
 
-              <BuyMeCoffeeButton />
-            </Box>
-
-            <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
+            <Typography
+              variant="body1"
+              sx={{
+                order: { xs: 2, sm: 3 },
+                flexBasis: '100%',
+                color: 'var(--muted-foreground)',
+              }}
+            >
               모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
             </Typography>
+
+            <Box
+              sx={{
+                order: { xs: 3, sm: 2 },
+                ml: { sm: 'auto' },
+                mt: { xs: '10px', sm: 0 },
+              }}
+            >
+              <BuyMeCoffeeButton />
+            </Box>
           </Box>
 
           {image ? (
