@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { track } from '@vercel/analytics/react';
+
 import { MAX_HISTORY } from '../constants';
 import { useBrushThickness, useIntensity, useMaskMode, useMaskShape } from '../store';
 import {
@@ -271,6 +273,7 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
       return;
     }
     downloadCanvas(canvas, buildDownloadName(image.baseName, image.mimeType), image.mimeType);
+    track('save_image');
   }, [image]);
 
   return {
