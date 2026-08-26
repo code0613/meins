@@ -1,0 +1,4 @@
+# 프로토타입 단계라 검색엔진 색인을 받지 않는다.
+# 공개로 전환할 때 이 파일과 vercel.json의 X-Robots-Tag, index.html의 robots 메타를 함께 되돌린다.
+User-agent: *
+Disallow: /
