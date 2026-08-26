@@ -58,3 +58,4 @@ Yarn Berry 워크스페이스입니다.
 ## 기여
 
 브랜치·커밋·이슈·PR 규칙은 [CONTRIBUTING.md](./CONTRIBUTING.md)를 참고하세요.
+환경 때문에 막혔던 문제와 해결법은 [docs/troubleshooting.md](./docs/troubleshooting.md)에 모아둡니다.
