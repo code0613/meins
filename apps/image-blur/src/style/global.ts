@@ -1,10 +1,5 @@
 import { css } from '@emotion/react';
 
-/**
- * 색은 이 :root 변수가 단일 기준이다.
- * libs/styles의 hex 상수는 MUI가 색을 계산할 때 쓰는 sRGB 등가값이므로
- * 값을 고칠 때는 양쪽을 함께 맞춘다.
- */
 export const globalStyles = css`
   :root {
     color-scheme: light;

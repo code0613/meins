@@ -17,7 +17,6 @@ export function MaskingPage() {
           top: 0,
           zIndex: 10,
           borderBottom: '1px solid var(--border)',
-          // 스크롤한 캔버스가 헤더 뒤로 비쳐 지나가도 글자가 읽히도록 흐린다
           backdropFilter: 'blur(8px)',
           bgcolor: 'color-mix(in oklab, var(--background) 80%, transparent)',
         }}

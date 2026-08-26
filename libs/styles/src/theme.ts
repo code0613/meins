@@ -32,7 +32,6 @@ const { augmentColor } = defaultPalette;
 
 const SHADES = { mainShade: 50, lightShade: 30, darkShade: 70 } as const;
 
-/** CSS 변수를 그대로 쓰는 값. 실제 렌더링은 globals.css의 oklch가 담당한다 */
 const VAR = {
   background: 'var(--background)',
   card: 'var(--card)',
@@ -82,7 +81,6 @@ const typographyTheme: ThemeOptions['typography'] = {
 export const meinsDesignSystemTheme = createTheme({
   palette: paletteTheme,
   typography: typographyTheme,
-  // --radius가 0.75rem이라 12px과 같다
   shape: { borderRadius: 12 },
   components: {
     MuiCssBaseline: {

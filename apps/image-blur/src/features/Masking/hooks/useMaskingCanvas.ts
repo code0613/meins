@@ -27,15 +27,14 @@ function createOffscreen(width: number, height: number) {
 export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  /** 되돌리기 범위에서 밀려난 스트로크까지 반영해 둔 판 */
+  /** 되돌리기 범위 밖으로 밀려난 스트로크까지 구워 넣은 판 */
   const bakedRef = useRef<HTMLCanvasElement | null>(null);
-  /** baked + 되돌릴 수 있는 스트로크까지 반영한 판. 드래그 중 매 프레임 다시 그리지 않으려고 둔다 */
+  /** baked + 되돌릴 수 있는 스트로크. 드래그 중 이것만 복사해 쓴다 */
   const baseRef = useRef<HTMLCanvasElement | null>(null);
 
   const strokesRef = useRef<Stroke[]>([]);
   const draftRef = useRef<Stroke | null>(null);
   const rafRef = useRef<number | null>(null);
-  /** mode+intensity 조합마다 효과판을 다시 만들지 않도록 캐시 */
   const effectCacheRef = useRef(new Map<string, HTMLCanvasElement>());
 
   const [strokeCount, setStrokeCount] = useState(0);
@@ -61,7 +60,6 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     [],
   );
 
-  /** baked 위에 되돌릴 수 있는 스트로크를 다시 얹어 base를 만든다 */
   const rebuildBase = useCallback(() => {
     const base = baseRef.current;
     const baked = bakedRef.current;
@@ -82,7 +80,6 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     });
   }, [getEffectCanvas, image]);
 
-  /** base와 그리는 중인 스트로크를 화면 캔버스에 반영 */
   const paint = useCallback(() => {
     const canvas = canvasRef.current;
     const base = baseRef.current;
@@ -104,7 +101,6 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     }
   }, [getEffectCanvas, image]);
 
-  /** 포인터 이동마다 그리면 낭비라 프레임당 한 번으로 묶는다 */
   const schedulePaint = useCallback(() => {
     if (rafRef.current !== null) {
       return;
@@ -115,7 +111,6 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     });
   }, [paint]);
 
-  // 이미지가 바뀌면 모든 작업 상태를 새로 잡는다
   useEffect(() => {
     strokesRef.current = [];
     draftRef.current = null;

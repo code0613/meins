@@ -14,10 +14,6 @@ function stripExtension(fileName: string) {
   return fileName.slice(0, dotIndex);
 }
 
-/**
- * 파일을 화면에 그릴 수 있는 이미지로 바꾼다.
- * FileReader로 base64를 만들지 않고 objectURL을 쓰므로 큰 사진에서도 메모리를 덜 먹는다.
- */
 export function loadImageFile(file: File): Promise<LoadedImage> {
   return new Promise((resolve, reject) => {
     if (!isAcceptedImage(file)) {
@@ -48,7 +44,6 @@ export function loadImageFile(file: File): Promise<LoadedImage> {
   });
 }
 
-/** 드롭된 항목 중 처음 만나는 이미지 파일 하나만 쓴다 */
 export function pickImageFile(fileList: FileList | null) {
   if (!fileList || fileList.length === 0) {
     return null;

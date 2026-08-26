@@ -47,12 +47,11 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
           onPointerCancel={handlePointerUp}
           sx={{
             maxWidth: '100%',
-            // 세로로 긴 사진이 화면을 넘기지 않도록 뷰포트 기준으로 제한한다
             maxHeight: '70vh',
             objectFit: 'contain',
             borderRadius: '8px',
             cursor: isDrawing ? 'grabbing' : 'crosshair',
-            // 손가락으로 끌 때 화면이 같이 스크롤되면 그림이 그려지지 않는다
+            // 없으면 모바일에서 화면이 함께 스크롤돼 획이 그려지지 않는다
             touchAction: 'none',
           }}
         />

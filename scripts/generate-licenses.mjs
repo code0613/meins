@@ -1,13 +1,8 @@
-/**
- * 배포 번들에 실제로 들어가는 의존성의 라이선스 고지를 모은다.
+/*
+ *  MIT 등 대부분의 라이선스가 사본에 저작권 고지 포함을 조건으로 건다.
+ *  실행 의존성만 모은다. devDependencies는 사용자에게 전달되지 않는다.
  *
- * MIT, BSD, Apache-2.0 등 대부분의 오픈소스 라이선스는
- * "사본에 저작권 고지와 라이선스 전문을 포함할 것"을 조건으로 건다.
- * 웹 앱도 배포물이므로 화면 어딘가에 이 고지가 있어야 한다.
- *
- * devDependencies는 사용자에게 전달되지 않으므로 대상이 아니다.
- *
- * 사용법: node scripts/generate-licenses.mjs
+ *  yarn licenses
  */
 import { createRequire } from 'node:module';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -20,7 +15,6 @@ const nodeModules = join(root, 'node_modules');
 
 const LICENSE_FILE_PATTERN = /^(LICENSE|LICENCE|COPYING)(\..*)?$/i;
 
-/** 앱의 실행 의존성에서 시작해 의존성 트리를 따라간다 */
 function collectProductionPackages() {
   const appPkg = JSON.parse(readFileSync(join(root, 'apps/image-blur/package.json'), 'utf8'));
   const queue = Object.keys(appPkg.dependencies ?? {});
