@@ -12,7 +12,8 @@
     "dev": "yarn workspace @meins/image-blur dev",
     "build": "yarn workspace @meins/image-blur build",
     "lint": "yarn workspace @meins/image-blur lint",
-    "preview": "yarn workspace @meins/image-blur preview"
+    "preview": "yarn workspace @meins/image-blur preview",
+    "licenses": "node scripts/generate-licenses.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

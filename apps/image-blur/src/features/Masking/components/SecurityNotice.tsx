@@ -1,4 +1,3 @@
-import { EMERALD, SLATE } from '@meins/styles';
 import LockIcon from '@mui/icons-material/Lock';
 import { Box, Typography } from '@mui/material';
 import { LOCAL_ONLY_NOTICE } from 'src/features/common/constants/text';
@@ -19,30 +18,26 @@ export function SecurityNotice({ variant = 'badge' }: SecurityNoticeProps) {
         px: isHeader ? '14px' : '10px',
         py: isHeader ? '8px' : '6px',
         borderRadius: '999px',
-        border: `1px solid ${EMERALD[80]}`,
-        bgcolor: 'rgba(16, 185, 129, 0.10)',
+        border: '1px solid',
+        borderColor: 'color-mix(in oklab, var(--primary) 24%, transparent)',
+        bgcolor: 'color-mix(in oklab, var(--primary) 8%, transparent)',
       }}
     >
       <LockIcon
         sx={{
           width: isHeader ? 18 : 16,
           height: isHeader ? 18 : 16,
-          color: EMERALD[40],
+          color: 'var(--primary)',
         }}
       />
-      <Typography
-        variant={isHeader ? 'subtitle3' : 'body4'}
-        sx={{
-          color: EMERALD[30],
-        }}
-      >
+      <Typography variant={isHeader ? 'subtitle3' : 'body4'} sx={{ color: 'var(--primary)' }}>
         {isHeader ? '개인정보 유출 걱정 없는 100% 로컬 처리' : LOCAL_ONLY_NOTICE}
       </Typography>
       {isHeader && (
         <Typography
           variant="body4"
           sx={{
-            color: SLATE[40],
+            color: 'var(--muted-foreground)',
             display: { xs: 'none', sm: 'block' },
           }}
         >
