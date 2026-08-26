@@ -31,7 +31,7 @@ export function SecurityNotice({ variant = 'badge' }: SecurityNoticeProps) {
         }}
       />
       <Typography variant={isHeader ? 'subtitle3' : 'body4'} sx={{ color: 'var(--primary)' }}>
-        {isHeader ? '사진은 이 기기에서만 100% 로컬 처리' : LOCAL_ONLY_NOTICE}
+        {isHeader ? '사진은 이 기기에서만 처리' : LOCAL_ONLY_NOTICE}
       </Typography>
       {isHeader && (
         <Typography
