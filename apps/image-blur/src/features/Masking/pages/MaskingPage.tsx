@@ -1,6 +1,7 @@
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { SERVICE_NAME } from 'src/features/common/constants/text';
+import { BuyMeCoffeeButton } from 'src/features/Donation/components';
 
 import { CanvasEditor, ImageUploader, SecurityNotice } from '../components';
 import { useImageLoader } from '../hooks';
@@ -41,21 +42,33 @@ export function MaskingPage() {
 
       <Container maxWidth="lg" sx={{ py: { xs: '24px', md: '40px' } }}>
         <Stack spacing="28px">
-          <Box>
-            <Typography
-              variant="display2"
-              sx={{
-                color: 'var(--foreground)',
-                fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
-                lineHeight: 1.35,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              가릴 부분만 문지르세요
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
-              모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
-            </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              gap: '16px',
+              flexWrap: 'wrap',
+            }}
+          >
+            <Box>
+              <Typography
+                variant="display2"
+                sx={{
+                  color: 'var(--foreground)',
+                  fontSize: 'clamp(1.05rem, 7.2vw, 2.25rem)',
+                  lineHeight: 1.35,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                가릴 부분만 문지르세요
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'var(--muted-foreground)', mt: '6px' }}>
+                모자이크, 블러, 채우기 중 골라 덮을 수 있어요.
+              </Typography>
+            </Box>
+
+            <BuyMeCoffeeButton />
           </Box>
 
           {image ? (
