@@ -1,81 +1,47 @@
-// Main Color
-export const PRIMARY = '#6366F1';
-
 /*
  *  NOTICE
- *  디자인 시스템 상 5G, 10G 등과 같이 표시되어있지만 개발 편의상 G를 제거하고 선언
+ *  화면에는 globals의 CSS 변수(oklch)가 쓰이고, 여기 hex는 그 sRGB 등가값이다.
+ *  MUI가 색을 밝히거나 어둡게 계산할 때 oklch 문자열을 파싱하지 못해 hex를 함께 둔다.
+ *  값을 고칠 때는 style/globals.css의 :root와 반드시 같이 맞춘다.
  */
-export const INDIGO = {
-  5: '#EEF0FF',
-  10: '#E0E3FF',
-  20: '#C7CBFE',
-  30: '#A5ABFC',
-  40: '#8B90FA',
-  50: '#6366F1', // MAIN
-  60: '#5457E0',
-  70: '#4649C7',
-  80: '#3B3DA3',
-  90: '#333582',
-  100: '#25264F',
-};
 
-export const EMERALD = {
-  5: '#ECFDF5',
-  10: '#D1FAE5',
-  20: '#A7F3D0',
-  30: '#6EE7B7',
-  40: '#34D399',
-  50: '#10B981', // POINT
-  60: '#059669',
-  70: '#047857',
-  80: '#065F46',
-  90: '#064E3B',
-  100: '#032E22',
-};
+// Main Color — azure accent
+export const PRIMARY = '#006DC4';
+export const PRIMARY_LIGHT = '#2D8CE5';
+export const PRIMARY_DARK = '#0051A6';
+export const PRIMARY_FOREGROUND = '#FFFFFF';
 
-/** 배경과 표면을 이루는 중립 톤. 값이 클수록 어둡다. */
+/** 배경과 표면을 이루는 중립 톤. 값이 클수록 어둡다 */
 export const SLATE = {
-  5: '#F8FAFC',
-  10: '#F1F5F9',
-  20: '#E2E8F0',
+  5: '#F8FAFC', // background
+  10: '#F1F5F9', // secondary / muted
+  20: '#E2E8F0', // border
   30: '#CBD5E1',
-  40: '#94A3B8',
-  50: '#64748B',
-  60: '#475569',
-  70: '#334155',
-  80: '#1E293B',
-  90: '#0F172A', // BACKGROUND
-  100: '#020617',
-};
-
-export const GREY = {
-  5: '#FAFAFA',
-  10: '#F4F4F4',
-  20: '#ECECEC',
-  30: '#DEDEDE',
-  40: '#BBBBBB',
-  50: '#9B9B9B',
-  60: '#727272',
-  70: '#5F5F5F',
-  80: '#404040',
-  90: '#1F1F1F',
+  40: '#90A1B9',
+  50: '#62748E', // muted-foreground
+  60: '#45556C',
+  70: '#314158',
+  80: '#1D293D', // secondary-foreground
+  90: '#0F172B', // foreground
+  100: '#020618',
 };
 
 export const BLACK = '#000000';
 export const WHITE = '#FFFFFF';
 
 // Sub Color
-export const SUCCESS = EMERALD[50];
-export const ERROR = '#F43F5E';
-export const WARNING = '#F59E0B';
+export const SUCCESS = '#00875A';
+export const ERROR = '#D4183D';
+export const WARNING = '#B45309';
 
 // Surface
-/** 다크 배경 위에 올라가는 카드·패널 표면 */
-export const SURFACE = SLATE[80];
-export const BACKGROUND = SLATE[90];
-export const BORDER = SLATE[70];
+export const BACKGROUND = SLATE[5];
+/** 배경 위에 올라가는 카드·패널 표면 */
+export const SURFACE = WHITE;
+export const BORDER = SLATE[20];
+export const MUTED = SLATE[10];
 
 // Text
-export const TEXT_PRIMARY = SLATE[5];
-export const TEXT_SECONDARY = SLATE[40];
-export const TEXT_DISABLED = SLATE[60];
+export const TEXT_PRIMARY = SLATE[90];
+export const TEXT_SECONDARY = SLATE[50];
+export const TEXT_DISABLED = SLATE[40];

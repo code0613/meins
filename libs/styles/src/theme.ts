@@ -3,9 +3,11 @@ import { type ThemeOptions, createTheme } from '@mui/material';
 import {
   BACKGROUND,
   BORDER,
-  EMERALD,
   ERROR,
-  INDIGO,
+  PRIMARY,
+  PRIMARY_DARK,
+  PRIMARY_FOREGROUND,
+  PRIMARY_LIGHT,
   SLATE,
   SUCCESS,
   SURFACE,
@@ -30,14 +32,25 @@ const { augmentColor } = defaultPalette;
 
 const SHADES = { mainShade: 50, lightShade: 30, darkShade: 70 } as const;
 
+/** CSS 변수를 그대로 쓰는 값. 실제 렌더링은 globals.css의 oklch가 담당한다 */
+const VAR = {
+  background: 'var(--background)',
+  card: 'var(--card)',
+  border: 'var(--border)',
+  primary: 'var(--primary)',
+  primaryForeground: 'var(--primary-foreground)',
+  foreground: 'var(--foreground)',
+  mutedForeground: 'var(--muted-foreground)',
+  muted: 'var(--muted)',
+  radius: 'var(--radius)',
+};
+
 const paletteTheme = createTheme({
   palette: {
-    mode: 'dark',
-    primary: augmentColor({ color: INDIGO, ...SHADES }),
-    secondary: augmentColor({ color: EMERALD, ...SHADES }),
+    mode: 'light',
+    primary: { main: PRIMARY, light: PRIMARY_LIGHT, dark: PRIMARY_DARK, contrastText: PRIMARY_FOREGROUND },
+    secondary: augmentColor({ color: SLATE, ...SHADES }),
     slate: augmentColor({ color: SLATE, ...SHADES }),
-    indigo: augmentColor({ color: INDIGO, ...SHADES }),
-    emerald: augmentColor({ color: EMERALD, ...SHADES }),
     success: { main: SUCCESS },
     error: { main: ERROR },
     warning: { main: WARNING },
@@ -48,7 +61,7 @@ const paletteTheme = createTheme({
 }).palette;
 
 const typographyTheme: ThemeOptions['typography'] = {
-  fontFamily: 'Pretendard',
+  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   display1: DISPLAY_TYPOGRAPHY.L,
   display2: DISPLAY_TYPOGRAPHY.M,
   heading1: HEADING_TYPOGRAPHY.L,
@@ -69,26 +82,35 @@ const typographyTheme: ThemeOptions['typography'] = {
 export const meinsDesignSystemTheme = createTheme({
   palette: paletteTheme,
   typography: typographyTheme,
+  // --radius가 0.75rem이라 12px과 같다
   shape: { borderRadius: 12 },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: BACKGROUND,
-          color: TEXT_PRIMARY,
+          backgroundColor: VAR.background,
+          color: VAR.foreground,
         },
       },
     },
     MuiButton: {
-      defaultProps: {
-        disableElevation: true,
-      },
+      defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
           ...LABEL_TYPOGRAPHY.L,
           textTransform: 'none',
-          borderRadius: '10px',
+          borderRadius: 'calc(var(--radius) - 2px)',
           paddingInline: '16px',
+        },
+        containedPrimary: {
+          backgroundColor: VAR.primary,
+          color: VAR.primaryForeground,
+          '&:hover': { backgroundColor: PRIMARY_DARK },
+        },
+        outlined: {
+          borderColor: VAR.border,
+          color: VAR.foreground,
+          '&:hover': { borderColor: VAR.border, backgroundColor: VAR.muted },
         },
       },
     },
@@ -96,16 +118,14 @@ export const meinsDesignSystemTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: SURFACE,
+          backgroundColor: VAR.card,
           boxShadow: SHADOW.CARD,
         },
       },
     },
     MuiSlider: {
       styleOverrides: {
-        root: {
-          color: INDIGO[50],
-        },
+        root: { color: VAR.primary },
       },
     },
     MuiToggleButton: {
@@ -113,24 +133,21 @@ export const meinsDesignSystemTheme = createTheme({
         root: {
           ...LABEL_TYPOGRAPHY.L,
           textTransform: 'none',
-          color: TEXT_SECONDARY,
-          borderColor: BORDER,
+          color: VAR.mutedForeground,
+          borderColor: VAR.border,
+          backgroundColor: VAR.card,
+          '&:hover': { backgroundColor: VAR.muted },
           '&.Mui-selected': {
-            color: TEXT_PRIMARY,
-            backgroundColor: INDIGO[80],
-            '&:hover': {
-              backgroundColor: INDIGO[70],
-            },
+            color: VAR.primaryForeground,
+            backgroundColor: VAR.primary,
+            '&:hover': { backgroundColor: PRIMARY_DARK },
           },
         },
       },
     },
     MuiTooltip: {
       styleOverrides: {
-        tooltip: {
-          ...BODY_TYPOGRAPHY.XS,
-          backgroundColor: SLATE[100],
-        },
+        tooltip: { ...BODY_TYPOGRAPHY.XS, backgroundColor: SLATE[90] },
       },
     },
   },

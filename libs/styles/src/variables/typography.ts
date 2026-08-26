@@ -1,5 +1,5 @@
 const COMMON_OPTION = {
-  fontFamily: 'Pretendard',
+  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   fontStyle: 'normal',
 };
 
