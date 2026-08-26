@@ -1,5 +1,8 @@
-/** 가리는 방식 */
-export type MaskMode = 'mosaic' | 'blur';
+/** 가리는 방식. fill은 원본과 무관한 단색으로 덮어 복원을 불가능하게 한다 */
+export type MaskMode = 'mosaic' | 'blur' | 'fill';
+
+/** 강도 조절이 의미 있는 방식. 채우기는 세기 개념이 없다 */
+export type AdjustableMaskMode = Exclude<MaskMode, 'fill'>;
 
 /** 마우스로 그리는 형태 */
 export type MaskShape = 'pen' | 'rect';
@@ -13,7 +16,7 @@ export interface Point {
 
 interface StrokeBase {
   mode: MaskMode;
-  /** 모자이크면 블록 크기(px), 블러면 반경(px). 둘 다 원본 해상도 기준 */
+  /** 모자이크면 블록 크기(px), 블러면 반경(px). 채우기는 쓰지 않아 0. 원본 해상도 기준 */
   intensity: number;
 }
 

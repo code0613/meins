@@ -1,3 +1,5 @@
+import { FILL_COLOR } from '../constants';
+
 import type { LoadedImage, MaskMode, Point, Stroke } from '../types';
 
 function createCanvas(width: number, height: number) {
@@ -86,11 +88,26 @@ function createBlurCanvas(image: HTMLImageElement, width: number, height: number
   return canvas;
 }
 
+/**
+ * 원본을 참조하지 않고 단색으로만 채운 판.
+ * 모자이크·블러와 달리 원본 픽셀에서 파생된 값이 전혀 남지 않아 복원이 불가능하다.
+ */
+function createFillCanvas(width: number, height: number) {
+  const canvas = createCanvas(width, height);
+  const ctx = getContext(canvas);
+  ctx.fillStyle = FILL_COLOR;
+  ctx.fillRect(0, 0, width, height);
+  return canvas;
+}
+
 export function createEffectCanvas(
   image: LoadedImage,
   mode: MaskMode,
   intensity: number,
 ): HTMLCanvasElement {
+  if (mode === 'fill') {
+    return createFillCanvas(image.width, image.height);
+  }
   if (mode === 'mosaic') {
     return createMosaicCanvas(image.element, image.width, image.height, Math.max(2, Math.round(intensity)));
   }
