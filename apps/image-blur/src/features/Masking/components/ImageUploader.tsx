@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { track } from '@vercel/analytics/react';
 
 
 import { ACCEPTED_EXTENSION_TEXT, ACCEPTED_MIME_TYPES } from '../constants';
@@ -17,6 +18,7 @@ export function ImageUploader({ isLoading, onSelectFiles }: ImageUploaderProps) 
   const [isDragging, setIsDragging] = useState(false);
 
   const handleOpenPicker = () => {
+    track('select_photo');
     inputRef.current?.click();
   };
 

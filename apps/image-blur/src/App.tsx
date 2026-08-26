@@ -3,6 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Analytics } from '@vercel/analytics/react';
 
 
 function ErrorFallback() {
@@ -46,6 +47,7 @@ function App() {
           <Outlet />
         </Suspense>
       </ErrorBoundary>
+      <Analytics />
     </Box>
   );
 }
