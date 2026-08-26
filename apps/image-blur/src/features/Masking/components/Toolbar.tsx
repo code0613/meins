@@ -2,12 +2,13 @@ import BlurOnIcon from '@mui/icons-material/BlurOn';
 import BrushIcon from '@mui/icons-material/Brush';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import DownloadIcon from '@mui/icons-material/Download';
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import UndoIcon from '@mui/icons-material/Undo';
 import { Box, Button, Divider, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 
-import { BRUSH_SIZE_LABEL, BRUSH_THICKNESS, INTENSITY_RANGE, MASK_MODE_LABEL } from '../constants';
+import { BRUSH_SIZE_LABEL, BRUSH_THICKNESS, INTENSITY_RANGE, MASK_MODE_LABEL, isAdjustableMode } from '../constants';
 import { useBrushSize, useIntensity, useMaskMode, useMaskShape, useToolActions } from '../store';
 
 import type { BrushSize, MaskMode, MaskShape } from '../types';
@@ -39,7 +40,8 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
   const intensity = useIntensity();
   const { setMode, setShape, setBrushSize, setIntensity } = useToolActions();
 
-  const range = INTENSITY_RANGE[mode];
+  const adjustable = isAdjustableMode(mode);
+  const range = adjustable ? INTENSITY_RANGE[mode] : null;
 
   return (
     <Box
@@ -72,6 +74,10 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
           <ToggleButton value="blur">
             <BlurOnIcon sx={{ width: 18, height: 18, mr: '6px' }} />
             {MASK_MODE_LABEL.blur}
+          </ToggleButton>
+          <ToggleButton value="fill">
+            <FormatColorFillIcon sx={{ width: 18, height: 18, mr: '6px' }} />
+            {MASK_MODE_LABEL.fill}
           </ToggleButton>
         </ToggleButtonGroup>
       </Field>
@@ -118,19 +124,27 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
         </ToggleButtonGroup>
       </Field>
 
-      <Field label={`가리는 강도 · ${intensity}`}>
-        <Slider
-          size="small"
-          value={intensity}
-          min={range.min}
-          max={range.max}
-          step={range.step}
-          onChange={(_, value) => {
-            setIntensity(value as number);
-          }}
-          sx={{ minWidth: { xs: '100%', lg: 160 } }}
-        />
-      </Field>
+      {range ? (
+        <Field label={`가리는 강도 · ${intensity}`}>
+          <Slider
+            size="small"
+            value={intensity}
+            min={range.min}
+            max={range.max}
+            step={range.step}
+            onChange={(_, value) => {
+              setIntensity(value as number);
+            }}
+            sx={{ minWidth: { xs: '100%', lg: 160 } }}
+          />
+        </Field>
+      ) : (
+        <Field label="가리는 강도">
+          <Typography variant="body4" sx={{ color: 'text.disabled', minWidth: { lg: 160 } }}>
+            채우기는 세기 조절이 없습니다
+          </Typography>
+        </Field>
+      )}
 
       <Divider flexItem orientation="vertical" sx={{ display: { xs: 'none', lg: 'block' } }} />
 
