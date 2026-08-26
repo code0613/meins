@@ -38,3 +38,7 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Vercel
+# .env*는 위 환경변수 규칙과 겹치고 .env.example 예외를 덮어써서 쓰지 않는다
+.vercel
