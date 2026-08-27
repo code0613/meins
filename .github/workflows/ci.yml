@@ -20,9 +20,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
 
-      # package.json의 packageManager 필드를 따라 Yarn 4를 쓴다
+      # setup-node의 cache 옵션을 쓰면 corepack을 켜기 전에 `yarn cache dir`이 돌아
+      # Yarn 1이 packageManager 필드를 보고 거부한다. 캐시 없이 간다
       - run: corepack enable
 
       - run: yarn install --immutable
