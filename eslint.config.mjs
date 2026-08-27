@@ -10,7 +10,7 @@ export default tseslint.config(
   { ignores: ['**/dist', '**/.eslintrc.cjs'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts}'],
     languageOptions: {
       globals: { ...globals.browser, ...globals.es2020 },
       parserOptions: {

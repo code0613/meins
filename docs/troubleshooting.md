@@ -229,3 +229,49 @@ ignoreCommand       제거
 **다음에 볼 것**
 구조를 먼저 정하고 서비스를 만들면 이런 되돌리기가 생긴다.
 서비스가 둘이 되기 전까지는 단일 패키지로 두고, 실제로 둘이 될 때 나누는 편이 싸다.
+
+## Corepack과 Vite가 `type: module`을 두고 충돌한다
+
+**발생일** 2026-08-27 · [#32](https://github.com/meins-lab/image-blur/issues/32)
+
+**증상**
+단일 패키지로 합친 뒤 Vercel 빌드가 깨졌다.
+
+```
+Error: Dynamic require of "util" is not supported
+Error: Command "yarn install" exited with 1
+```
+
+`type: module`을 빼면 이번엔 로컬 빌드가 깨진다.
+
+```
+"@vitejs/plugin-react-swc" resolved to an ESM file.
+ESM file cannot be loaded by `require`.
+```
+
+**원인**
+둘이 서로 반대를 요구한다.
+
+| | 요구 |
+|---|---|
+| Corepack | `type: module`이 **없어야** 한다. 캐시된 `yarn.js`가 CJS인데 ESM으로 해석돼 죽는다 |
+| Vite 설정 로딩 | `vite.config.ts`를 ESM으로 읽어야 한다. 플러그인이 ESM 전용이다 |
+
+모노레포일 때는 우연히 해결돼 있었다. 루트 `package.json`에는 `type`이 없고
+`apps/image-blur/package.json`에만 있어서, Corepack은 루트를 보고 Vite는 앱을 봤다.
+`package.json`이 하나로 합쳐지면서 충돌이 드러났다.
+
+**해결**
+`type: module`을 빼고 설정 파일 확장자로 ESM을 지정한다.
+
+```
+vite.config.ts → vite.config.mts
+```
+
+`.mts`는 `type` 설정과 무관하게 항상 ESM으로 읽힌다.
+`tsconfig.node.json`의 `include`와 ESLint의 `files` 패턴도 같이 바꿔야 한다.
+
+**다음에 볼 것**
+`Dynamic require of "util" is not supported`가 보이면 `package.json`의 `type` 필드를 먼저 본다.
+Vercel이 빌드 로그 맨 위에 경고로 알려주기도 한다.
+`yarnPath`를 쓰는 방법도 있지만 Yarn 릴리스 파일을 저장소에 넣어야 해서 더 무겁다.
