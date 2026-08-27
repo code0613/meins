@@ -61,7 +61,7 @@ export function CanvasEditor({ image }: CanvasEditorProps) {
       <ActionBar canUndo={canUndo} onUndo={undo} onReset={reset} onDownload={download} />
 
       <Typography variant="body3" sx={{ color: 'var(--muted-foreground)', textAlign: 'center' }}>
-        가리고 싶은 부분을 마우스로 문지르거나 드래그하세요. 되돌리기는 최근 10단계까지 가능해요.
+        가리고 싶은 부분을 마우스로 문지르거나 드래그하세요.
       </Typography>
     </Box>
   );
