@@ -8,7 +8,7 @@ import {
   buildDownloadName,
   composeStroke,
   createEffectCanvas,
-  downloadCanvas,
+  saveCanvas,
   scaleThickness,
   toImagePoint,
 } from '../utils/canvas';
@@ -247,6 +247,31 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     paint();
   }, [paint, rebuildBase]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // 한글 입력 상태에서는 event.key가 'ㅈ'으로 들어온다. code는 물리 키라 영향받지 않는다
+      if (event.code !== 'KeyZ' || event.shiftKey) {
+        return;
+      }
+      if (!event.metaKey && !event.ctrlKey) {
+        return;
+      }
+
+      const { target } = event;
+      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"]')) {
+        return;
+      }
+
+      event.preventDefault();
+      undo();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [undo]);
+
   const reset = useCallback(() => {
     if (!image) {
       return;
@@ -267,12 +292,12 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     paint();
   }, [image, paint, rebuildBase]);
 
-  const download = useCallback(() => {
+  const download = useCallback(async () => {
     const canvas = canvasRef.current;
     if (!image || !canvas) {
       return;
     }
-    downloadCanvas(canvas, buildDownloadName(image.baseName, image.mimeType), image.mimeType);
+    await saveCanvas(canvas, buildDownloadName(image.baseName, image.mimeType), image.mimeType);
     track('save_image');
   }, [image]);
 

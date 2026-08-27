@@ -1,24 +1,14 @@
 import BlurOnIcon from '@mui/icons-material/BlurOn';
 import BrushIcon from '@mui/icons-material/Brush';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
-import DownloadIcon from '@mui/icons-material/Download';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import UndoIcon from '@mui/icons-material/Undo';
-import { Box, Button, Divider, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 
 import { BRUSH_SIZE_LABEL, BRUSH_THICKNESS, INTENSITY_RANGE, MASK_MODE_LABEL, isAdjustableMode } from '../constants';
 import { useBrushSize, useIntensity, useMaskMode, useMaskShape, useToolActions } from '../store';
 
 import type { BrushSize, MaskMode, MaskShape } from '../types';
-
-interface ToolbarProps {
-  canUndo: boolean;
-  onUndo: () => void;
-  onReset: () => void;
-  onDownload: () => void;
-}
 
 const BRUSH_SIZES = Object.keys(BRUSH_THICKNESS) as BrushSize[];
 
@@ -33,7 +23,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) {
+export function Toolbar() {
   const mode = useMaskMode();
   const shape = useMaskShape();
   const brushSize = useBrushSize();
@@ -145,20 +135,6 @@ export function Toolbar({ canUndo, onUndo, onReset, onDownload }: ToolbarProps) 
           </Typography>
         </Field>
       )}
-
-      <Divider flexItem orientation="vertical" sx={{ display: { xs: 'none', lg: 'block' } }} />
-
-      <Box sx={{ display: 'flex', gap: '8px', flexWrap: 'wrap', ml: { lg: 'auto' } }}>
-        <Button variant="outlined" color="inherit" startIcon={<UndoIcon />} disabled={!canUndo} onClick={onUndo}>
-          되돌리기
-        </Button>
-        <Button variant="outlined" color="inherit" startIcon={<RestartAltIcon />} onClick={onReset}>
-          전체 지우기
-        </Button>
-        <Button variant="contained" color="secondary" startIcon={<DownloadIcon />} onClick={onDownload}>
-          저장하기
-        </Button>
-      </Box>
     </Box>
   );
 }

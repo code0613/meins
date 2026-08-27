@@ -64,7 +64,38 @@ function createMosaicCanvas(image: HTMLImageElement, width: number, height: numb
   return canvas;
 }
 
-function createBlurCanvas(image: HTMLImageElement, width: number, height: number, radius: number) {
+let filterBlurWorks: boolean | null = null;
+
+/**
+ * `ctx.filter` 는 속성이 있어도 무시하는 구현이 있다. Safari와 일부 인앱 WebView가 그렇고,
+ * 그대로 두면 블러가 조용히 원본을 그려 가려진 줄 알고 저장하게 된다.
+ * 존재 여부가 아니라 경계 픽셀이 실제로 섞였는지로 판정한다.
+ */
+function supportsFilterBlur() {
+  if (filterBlurWorks !== null) {
+    return filterBlurWorks;
+  }
+
+  try {
+    const probe = createCanvas(8, 8);
+    const ctx = getContext(probe);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, 8, 8);
+    ctx.filter = 'blur(2px)';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, 4, 8);
+    ctx.filter = 'none';
+
+    const [red] = ctx.getImageData(4, 4, 1, 1).data;
+    filterBlurWorks = red > 8 && red < 247;
+  } catch {
+    filterBlurWorks = false;
+  }
+
+  return filterBlurWorks;
+}
+
+function createFilterBlurCanvas(image: HTMLImageElement, width: number, height: number, radius: number) {
   const padding = Math.ceil(radius * 2);
   const padded = createCanvas(width + padding * 2, height + padding * 2);
   const paddedCtx = getContext(padded);
@@ -78,6 +109,39 @@ function createBlurCanvas(image: HTMLImageElement, width: number, height: number
   const canvas = createCanvas(width, height);
   getContext(canvas).drawImage(padded, padding, padding, width, height, 0, 0, width, height);
   return canvas;
+}
+
+/**
+ * 작게 줄였다 늘리면 보간이 픽셀을 섞는다. 필터 없이도 어디서나 동작한다.
+ * 같은 반지름이면 filter 쪽이 더 강하게 뭉개므로 축소 비율을 키워 세기를 맞춘다.
+ * 덜 뭉개지는 것보다 더 뭉개지는 쪽이 안전하다.
+ */
+const DOWNSCALE_STRENGTH = 1.7;
+
+function createDownscaleBlurCanvas(image: HTMLImageElement, width: number, height: number, radius: number) {
+  const divisor = radius * DOWNSCALE_STRENGTH;
+  const smallWidth = Math.max(1, Math.round(width / divisor));
+  const smallHeight = Math.max(1, Math.round(height / divisor));
+
+  const small = createCanvas(smallWidth, smallHeight);
+  const smallCtx = getContext(small);
+  smallCtx.imageSmoothingEnabled = true;
+  smallCtx.imageSmoothingQuality = 'high';
+  smallCtx.drawImage(image, 0, 0, width, height, 0, 0, smallWidth, smallHeight);
+
+  const canvas = createCanvas(width, height);
+  const ctx = getContext(canvas);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(small, 0, 0, smallWidth, smallHeight, 0, 0, width, height);
+  return canvas;
+}
+
+function createBlurCanvas(image: HTMLImageElement, width: number, height: number, radius: number) {
+  if (supportsFilterBlur()) {
+    return createFilterBlurCanvas(image, width, height, radius);
+  }
+  return createDownscaleBlurCanvas(image, width, height, radius);
 }
 
 function createFillCanvas(width: number, height: number) {
@@ -174,17 +238,69 @@ export function scaleThickness(baseThickness: number, imageWidth: number) {
   return Math.max(6, (baseThickness * imageWidth) / REFERENCE_WIDTH);
 }
 
-export function downloadCanvas(canvas: HTMLCanvasElement, fileName: string, mimeType: string) {
-  const type = mimeType === 'image/jpeg' ? 'image/jpeg' : 'image/png';
-  const quality = type === 'image/jpeg' ? 0.95 : undefined;
+function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      blob => {
+        if (!blob) {
+          reject(new Error('CANVAS_BLOB_FAILED'));
+          return;
+        }
+        resolve(blob);
+      },
+      type,
+      quality,
+    );
+  });
+}
 
-  const url = canvas.toDataURL(type, quality);
+/**
+ * OS 공유 시트를 연다. 네트워크로 보내는 것이 아니라 어디로 보낼지 사용자가 그 자리에서 고른다.
+ * iOS에서는 「이미지 저장」이 이 시트 안에 있고, 인앱 브라우저에서도 대부분 동작한다.
+ */
+async function shareFile(file: File) {
+  if (!navigator.canShare || !navigator.share || !navigator.canShare({ files: [file] })) {
+    return false;
+  }
+
+  try {
+    await navigator.share({ files: [file] });
+    return true;
+  } catch (error) {
+    // 사용자가 시트를 닫은 것은 실패가 아니다. 다운로드로 또 떨어지면 안 된다
+    return error instanceof DOMException && error.name === 'AbortError';
+  }
+}
+
+function downloadBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+
+  // 즉시 해제하면 다운로드가 시작되기 전에 URL이 죽는 브라우저가 있다
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+/**
+ * 인앱 브라우저는 `<a download>`를 무시하는 경우가 많다. 되는 방법을 순서대로 시도한다.
+ * UA로 브라우저를 판별하지 않는다. 앱마다 형식이 다르고 계속 바뀐다.
+ */
+export async function saveCanvas(canvas: HTMLCanvasElement, fileName: string, mimeType: string) {
+  const type = mimeType === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+  const quality = type === 'image/jpeg' ? 0.95 : undefined;
+
+  const blob = await canvasToBlob(canvas, type, quality);
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+
+  if (isTouchDevice && (await shareFile(new File([blob], fileName, { type })))) {
+    return;
+  }
+
+  downloadBlob(blob, fileName);
 }
 
 export function buildDownloadName(baseName: string, mimeType: string) {
