@@ -80,4 +80,29 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // image-blur 한정. 사진이 기기 밖으로 나가지 않는 것이 이 앱의 전제다.
+    // 통신이 필요한 앱이 apps/ 아래 생길 수 있으므로 저장소 전체로 넓히지 말 것.
+    files: ['apps/image-blur/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        { name: 'fetch', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
+        { name: 'XMLHttpRequest', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
+        { name: 'WebSocket', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
+        { name: 'EventSource', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
+        { name: 'localStorage', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
+        { name: 'sessionStorage', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
+        { name: 'indexedDB', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
+      ],
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'navigator',
+          property: 'sendBeacon',
+          message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것',
+        },
+      ],
+    },
+  },
 );
