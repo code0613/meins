@@ -238,17 +238,69 @@ export function scaleThickness(baseThickness: number, imageWidth: number) {
   return Math.max(6, (baseThickness * imageWidth) / REFERENCE_WIDTH);
 }
 
-export function downloadCanvas(canvas: HTMLCanvasElement, fileName: string, mimeType: string) {
-  const type = mimeType === 'image/jpeg' ? 'image/jpeg' : 'image/png';
-  const quality = type === 'image/jpeg' ? 0.95 : undefined;
+function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      blob => {
+        if (!blob) {
+          reject(new Error('CANVAS_BLOB_FAILED'));
+          return;
+        }
+        resolve(blob);
+      },
+      type,
+      quality,
+    );
+  });
+}
 
-  const url = canvas.toDataURL(type, quality);
+/**
+ * OS 공유 시트를 연다. 네트워크로 보내는 것이 아니라 어디로 보낼지 사용자가 그 자리에서 고른다.
+ * iOS에서는 「이미지 저장」이 이 시트 안에 있고, 인앱 브라우저에서도 대부분 동작한다.
+ */
+async function shareFile(file: File) {
+  if (!navigator.canShare || !navigator.share || !navigator.canShare({ files: [file] })) {
+    return false;
+  }
+
+  try {
+    await navigator.share({ files: [file] });
+    return true;
+  } catch (error) {
+    // 사용자가 시트를 닫은 것은 실패가 아니다. 다운로드로 또 떨어지면 안 된다
+    return error instanceof DOMException && error.name === 'AbortError';
+  }
+}
+
+function downloadBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+
+  // 즉시 해제하면 다운로드가 시작되기 전에 URL이 죽는 브라우저가 있다
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+/**
+ * 인앱 브라우저는 `<a download>`를 무시하는 경우가 많다. 되는 방법을 순서대로 시도한다.
+ * UA로 브라우저를 판별하지 않는다. 앱마다 형식이 다르고 계속 바뀐다.
+ */
+export async function saveCanvas(canvas: HTMLCanvasElement, fileName: string, mimeType: string) {
+  const type = mimeType === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+  const quality = type === 'image/jpeg' ? 0.95 : undefined;
+
+  const blob = await canvasToBlob(canvas, type, quality);
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+
+  if (isTouchDevice && (await shareFile(new File([blob], fileName, { type })))) {
+    return;
+  }
+
+  downloadBlob(blob, fileName);
 }
 
 export function buildDownloadName(baseName: string, mimeType: string) {

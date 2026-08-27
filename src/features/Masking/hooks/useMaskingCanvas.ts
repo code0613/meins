@@ -8,7 +8,7 @@ import {
   buildDownloadName,
   composeStroke,
   createEffectCanvas,
-  downloadCanvas,
+  saveCanvas,
   scaleThickness,
   toImagePoint,
 } from '../utils/canvas';
@@ -267,12 +267,12 @@ export function useMaskingCanvas({ image }: UseMaskingCanvasParams) {
     paint();
   }, [image, paint, rebuildBase]);
 
-  const download = useCallback(() => {
+  const download = useCallback(async () => {
     const canvas = canvasRef.current;
     if (!image || !canvas) {
       return;
     }
-    downloadCanvas(canvas, buildDownloadName(image.baseName, image.mimeType), image.mimeType);
+    await saveCanvas(canvas, buildDownloadName(image.baseName, image.mimeType), image.mimeType);
     track('save_image');
   }, [image]);
 
