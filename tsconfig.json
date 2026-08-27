@@ -1,12 +1,4 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
-  },
-  "references": [
-    { "path": "./apps/image-blur" }
-  ],
-  "exclude": ["**/dist/*", "**/node_modules/*"]
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

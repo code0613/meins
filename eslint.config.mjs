@@ -10,12 +10,12 @@ export default tseslint.config(
   { ignores: ['**/dist', '**/.eslintrc.cjs'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts}'],
     languageOptions: {
       globals: { ...globals.browser, ...globals.es2020 },
       parserOptions: {
         // tsconfig.json은 references만 담고 있어 파일이 잡히지 않는다. 실제 프로젝트를 직접 가리킨다
-        project: ['./apps/image-blur/tsconfig.app.json', './apps/image-blur/tsconfig.node.json'],
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
         tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: { jsx: true },
       },
@@ -81,16 +81,15 @@ export default tseslint.config(
     },
   },
   {
-    // image-blur 한정. 사진이 기기 밖으로 나가지 않는 것이 이 앱의 전제다.
-    // 통신이 필요한 앱이 apps/ 아래 생길 수 있으므로 저장소 전체로 넓히지 말 것.
-    files: ['apps/image-blur/**/*.{ts,tsx}'],
+    // 사진이 기기 밖으로 나가지 않는 것이 이 서비스의 전제다. AGENTS.md를 볼 것
+    files: ['src/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-globals': [
         'error',
-        { name: 'fetch', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
-        { name: 'XMLHttpRequest', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
-        { name: 'WebSocket', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
-        { name: 'EventSource', message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것' },
+        { name: 'fetch', message: '이 서비스는 외부와 통신하지 않는다. AGENTS.md를 볼 것' },
+        { name: 'XMLHttpRequest', message: '이 서비스는 외부와 통신하지 않는다. AGENTS.md를 볼 것' },
+        { name: 'WebSocket', message: '이 서비스는 외부와 통신하지 않는다. AGENTS.md를 볼 것' },
+        { name: 'EventSource', message: '이 서비스는 외부와 통신하지 않는다. AGENTS.md를 볼 것' },
         { name: 'localStorage', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
         { name: 'sessionStorage', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
         { name: 'indexedDB', message: '탭을 닫으면 아무것도 남지 않는다는 것이 README의 약속이다' },
@@ -100,7 +99,7 @@ export default tseslint.config(
         {
           object: 'navigator',
           property: 'sendBeacon',
-          message: 'image-blur는 외부와 통신하지 않는다. apps/image-blur/AGENTS.md를 볼 것',
+          message: '이 서비스는 외부와 통신하지 않는다. AGENTS.md를 볼 것',
         },
       ],
     },
