@@ -40,3 +40,7 @@ export function isAdjustableMode(mode: MaskMode): mode is AdjustableMaskMode {
 export const MAX_HISTORY = 10;
 
 export const LARGE_IMAGE_PIXELS = 40_000_000;
+
+/** 맥은 ⌘, 그 외는 Ctrl. 표기용이라 UA로 갈라도 위험이 없다 */
+export const UNDO_SHORTCUT_LABEL =
+  typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘Z' : 'Ctrl+Z';

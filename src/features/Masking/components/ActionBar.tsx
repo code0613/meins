@@ -3,6 +3,8 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import UndoIcon from '@mui/icons-material/Undo';
 import { Box, Button } from '@mui/material';
 
+import { UNDO_SHORTCUT_LABEL } from '../constants';
+
 interface ActionBarProps {
   canUndo: boolean;
   onUndo: () => void;
@@ -33,6 +35,7 @@ export function ActionBar({ canUndo, onUndo, onReset, onDownload }: ActionBarPro
         startIcon={<UndoIcon />}
         disabled={!canUndo}
         onClick={onUndo}
+        title={`되돌리기 (${UNDO_SHORTCUT_LABEL})`}
         sx={{ flex: { xs: 1, md: 'none' } }}
       >
         되돌리기
