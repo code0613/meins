@@ -8,11 +8,11 @@
     "libs/*"
   ],
   "scripts": {
-    "app": "yarn workspace @meins/image-blur",
-    "dev": "yarn workspace @meins/image-blur dev",
-    "build": "yarn workspace @meins/image-blur build",
-    "lint": "yarn workspace @meins/image-blur lint",
-    "preview": "yarn workspace @meins/image-blur preview",
+    "image-blur": "yarn workspace @meins/image-blur",
+    "dev": "yarn image-blur dev",
+    "build": "yarn image-blur build",
+    "lint": "yarn image-blur lint",
+    "preview": "yarn image-blur preview",
     "licenses": "node scripts/generate-licenses.mjs"
   },
   "devDependencies": {
