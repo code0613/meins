@@ -50,9 +50,16 @@ GPS 좌표나 촬영 기기 정보가 저장 파일에 남지 않습니다.
 
 ```bash
 yarn install
-yarn dev
+yarn dev            # 기본 앱(image-blur) 개발 서버
 yarn build
 yarn lint
+```
+
+앱을 지정해서 돌리려면 앱 이름을 앞에 붙입니다.
+
+```bash
+yarn image-blur dev
+yarn image-blur build
 ```
 
 ## 구조
@@ -60,17 +67,41 @@ yarn lint
 ```
 meins/
 ├─ apps/image-blur/          React 19 · TypeScript · Vite 5 · MUI v5
+│  ├─ vercel.json            이 앱의 배포 설정
 │  └─ src/
 │     ├─ features/Masking/   마스킹 기능 일체
 │     ├─ features/Licenses/  오픈소스 고지
 │     └─ router/ · style/
-└─ libs/
-   ├─ styles/                색·타이포·테마
-   └─ components/            공용 컴포넌트
+├─ libs/
+│  ├─ styles/                색·타이포·테마
+│  └─ components/            공용 컴포넌트
+└─ scripts/
+   └─ vercel-ignore-build.sh 변경 없는 앱은 빌드를 건너뛴다
 ```
 
 Yarn Berry 워크스페이스입니다.
 색은 `apps/image-blur/src/style/global.ts`의 CSS 변수가 기준입니다.
+
+## 배포
+
+Vercel 프로젝트 하나가 앱 하나를 맡습니다. 배포 설정은 레포 루트가 아니라 **각 앱 안**에 있습니다.
+
+| Vercel 설정 | 값 |
+|---|---|
+| Root Directory | `apps/image-blur` |
+| Include files outside of the Root Directory | 켬 |
+| 환경변수 | `ENABLE_EXPERIMENTAL_COREPACK=1` |
+
+두 번째 설정을 끄면 `libs/*` 를 워크스페이스로 참조할 수 없어 `@meins/components@workspace:^` 에서 빌드가 깨집니다. 환경변수는 Yarn Berry 의 `workspace:` 프로토콜 때문에 필요합니다.
+
+`vercel.json` 의 `ignoreCommand` 가 해당 앱과 공유 자원(`libs`, `package.json`, `yarn.lock`, `.yarnrc.yml`)의 변경 여부를 보고, 바뀐 게 없으면 빌드를 건너뜁니다. 비교 기준을 찾지 못하면 건너뛰지 않고 빌드합니다.
+
+### 앱을 추가하려면
+
+1. `apps/<새앱>/` 을 만들고 `package.json` 의 이름을 `@meins/<새앱>` 으로 둡니다
+2. `apps/image-blur/vercel.json` 을 복사해 `ignoreCommand` 의 경로를 새 앱으로 바꿉니다
+3. 루트 `package.json` 에 패스스루를 한 줄 추가합니다 — `"<새앱>": "yarn workspace @meins/<새앱>"`
+4. Vercel 에서 같은 레포로 프로젝트를 하나 더 만들고, 위 표대로 Root Directory 와 나머지를 설정합니다
 
 ## 문서
 
