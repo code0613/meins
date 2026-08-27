@@ -71,9 +71,9 @@ export function BuyMeCoffeeButton() {
             Buy Me A Coffee ☕
           </Typography>
 
-          <Stack direction="row" spacing="16px" justifyContent="center">
+          <Stack direction="row" spacing="16px" justifyContent="center" alignItems="flex-start">
             {DONATION_METHODS.map(method => (
-              <Stack key={method.id} spacing="14px" alignItems="center" sx={{ flex: 1 }}>
+              <Stack key={method.id} spacing="14px" alignItems="center">
                 <Box
                   sx={{
                     px: '14px',
@@ -88,19 +88,47 @@ export function BuyMeCoffeeButton() {
                 </Box>
 
                 <Box
-                  component="img"
-                  src={method.qrSrc}
-                  alt={`${method.label} 송금 QR 코드`}
-                  loading="lazy"
+                  component="a"
+                  href={method.linkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   sx={{
-                    width: '100%',
-                    maxWidth: '160px',
-                    aspectRatio: '1 / 1',
-                    objectFit: 'contain',
+                    display: 'block',
+                    width: '180px',
+                    maxWidth: '100%',
+                    lineHeight: 0,
                     borderRadius: '8px',
-                    bgcolor: '#FFFFFF',
+                    cursor: 'pointer',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    outlineOffset: '4px',
+                    transition: 'transform 120ms ease, box-shadow 120ms ease',
+                    '@media (hover: hover)': {
+                      '&:hover': {
+                        boxShadow: '0 6px 18px color-mix(in oklab, var(--foreground) 16%, transparent)',
+                      },
+                    },
+                    '&:active': {
+                      transform: 'scale(0.96)',
+                      boxShadow: '0 2px 6px color-mix(in oklab, var(--foreground) 12%, transparent)',
+                    },
                   }}
-                />
+                >
+                  <Box
+                    component="img"
+                    src={method.qrSrc}
+                    alt={`${method.label} 송금 QR 코드`}
+                    loading="lazy"
+                    sx={{
+                      display: 'block',
+                      width: '100%',
+                      aspectRatio: '1 / 1',
+                      objectFit: 'contain',
+                      borderRadius: '8px',
+                      bgcolor: '#FFFFFF',
+                    }}
+                  />
+                </Box>
               </Stack>
             ))}
           </Stack>
@@ -114,7 +142,7 @@ export function BuyMeCoffeeButton() {
                 color: 'var(--muted-foreground)',
               }}
             >
-              QR을 찍으면 송금 화면이 열려요. 안 보내셔도 괜찮아요.
+              눌러도 되고 찍어도 돼요. 안 보내셔도 괜찮아요.
             </Typography>
             <Typography
               variant="body4"
