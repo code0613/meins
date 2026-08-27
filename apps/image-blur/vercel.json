@@ -1,8 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "yarn build",
-  "outputDirectory": "apps/image-blur/dist",
+  "outputDirectory": "dist",
   "framework": null,
+  "ignoreCommand": "bash ../../scripts/vercel-ignore-build.sh apps/image-blur",
   "rewrites": [
     {
       "source": "/((?!assets/|_vercel/).*)",

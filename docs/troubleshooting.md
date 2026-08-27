@@ -103,3 +103,47 @@ echo "1" | vercel env add ENABLE_EXPERIMENTAL_COREPACK production
 배포 로그의 `yarn install v...` 한 줄을 먼저 본다.
 `1.x`가 찍혀 있으면 로컬과 다른 패키지 매니저로 돌고 있다는 뜻이고,
 `yarn.lock`도 무시되고 있다고 봐야 한다.
+
+## Vercel: 배포 설정이 레포 루트에 있으면 앱을 더 못 붙인다
+
+**발생일** 2026-08-27 · [#23](https://github.com/code0613/meins/issues/23)
+
+**증상**
+증상이 나기 전에 구조로 먼저 막힌 경우다.
+`apps/` 아래에 두 번째 앱을 만들면 배포할 방법이 없다.
+
+**원인**
+Vercel 프로젝트 하나는 출력 디렉터리를 하나만 가진다. 앱마다 프로젝트가 필요한데,
+`vercel.json`은 프로젝트의 Root Directory에서만 읽힌다.
+Root Directory가 레포 루트면 앱이 몇 개든 설정 파일은 하나뿐이다.
+
+첫 배포 때 Root Directory가 `apps/image-blur`로 잡혀 있어 루트 `vercel.json`이 무시됐고,
+그때 `rootDirectory: null`로 되돌려 급히 막았다. 그 임시 조치가 남아 있었다.
+
+**해결**
+`vercel.json`을 앱 안으로 옮기고 Root Directory를 그 앱으로 지정한다.
+`outputDirectory`는 Root Directory 기준 상대 경로가 되므로 `apps/image-blur/dist` → `dist`.
+
+```
+Root Directory                              apps/image-blur
+Include files outside of the Root Directory 켬
+```
+
+두 번째를 끄면 `libs/*`를 워크스페이스로 참조할 수 없어 위의 `workspace:^` 에러가 다시 난다.
+Yarn 워크스페이스가 잡히면 Vercel이 알아서 켜주는 것으로 보이나, 안 되면 대시보드에서 직접 켠다.
+
+**덤: 변경 없는 앱은 빌드를 건너뛴다**
+앱이 둘이 되면 한쪽만 고쳐도 양쪽이 다 빌드된다.
+`vercel.json`의 `ignoreCommand`로 막는다. 대시보드 대신 파일에 두면 앱마다 따로 관리된다.
+
+```json
+"ignoreCommand": "bash ../../scripts/vercel-ignore-build.sh apps/image-blur"
+```
+
+종료코드 0이면 건너뛰고 1이면 빌드한다. 헷갈리기 쉬운 방향이다.
+비교 기준(`VERCEL_GIT_PREVIOUS_SHA` 또는 `HEAD^`)을 못 찾으면 건너뛰지 않는다.
+빌드해야 하는데 건너뛰는 쪽이 더 위험하기 때문이다.
+
+**다음에 볼 것**
+배포 로그 맨 위의 `Running "bash ../../scripts/..."` 줄과 그 다음 줄을 본다.
+건너뛴 배포는 로그가 거기서 끝난다.
