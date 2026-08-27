@@ -105,6 +105,8 @@ yarn lint
 yarn build
 ```
 
+**CI 가 같은 것을 검사합니다.** `dev` 와 `main` 으로 가는 PR 은 통과하지 못하면 머지할 수 없습니다.
+
 UI 를 바꿨으면 브라우저에서 직접 확인하세요.
 정렬은 눈으로 보지 말고 `getBoundingClientRect` 로 숫자를 재서 확인합니다.
 
