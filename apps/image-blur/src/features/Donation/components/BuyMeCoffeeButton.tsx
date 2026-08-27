@@ -128,7 +128,7 @@ export function BuyMeCoffeeButton() {
                 color: 'var(--muted-foreground)',
               }}
             >
-              QR을 탭하거나 찍으면 카카오페이가 열려요. 안 보내셔도 괜찮아요.
+              QR을 탭하거나 찍으면 앱이 열려요. 안 보내셔도 괜찮아요.
             </Typography>
             <Typography
               variant="body4"
