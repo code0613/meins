@@ -142,7 +142,7 @@ export function BuyMeCoffeeButton() {
                 color: 'var(--muted-foreground)',
               }}
             >
-              QR을 탭하거나 찍으면 앱이 열려요. 안 보내셔도 괜찮아요.
+              눌러도 되고 찍어도 돼요. 안 보내셔도 괜찮아요.
             </Typography>
             <Typography
               variant="body4"
