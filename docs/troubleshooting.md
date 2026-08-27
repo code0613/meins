@@ -44,7 +44,7 @@ vercel api "v9/projects/<projectId>?teamId=<teamId>"
 
 ## Vercel: type module 선언이 Corepack의 yarn 실행을 깨뜨린다
 
-**발생일** 2026-08-26 · [#5](https://github.com/meins-lab/meins/issues/5)
+**발생일** 2026-08-26 · [#5](https://github.com/meins-lab/image-blur/issues/5)
 
 **증상**
 ```
@@ -75,7 +75,7 @@ CommonJS인 Yarn이 ESM으로 해석되면서 내부 `require()`가 실패한다
 
 ## Vercel: Yarn 1으로 설치해 workspace 프로토콜을 못 읽는다
 
-**발생일** 2026-08-26 · [#3](https://github.com/meins-lab/meins/issues/3)
+**발생일** 2026-08-26 · [#3](https://github.com/meins-lab/image-blur/issues/3)
 
 **증상**
 ```
@@ -106,7 +106,7 @@ echo "1" | vercel env add ENABLE_EXPERIMENTAL_COREPACK production
 
 ## Vercel: 배포 설정이 레포 루트에 있으면 앱을 더 못 붙인다
 
-**발생일** 2026-08-27 · [#23](https://github.com/meins-lab/meins/issues/23)
+**발생일** 2026-08-27 · [#23](https://github.com/meins-lab/image-blur/issues/23)
 
 **증상**
 증상이 나기 전에 구조로 먼저 막힌 경우다.
@@ -186,3 +186,92 @@ Vercel 프로젝트의 Root Directory 와 환경변수가 그대로인지
 
 public 저장소라 Free 조직에서도 브랜치 보호가 유지됐다.
 private 저장소는 Free 조직에서 제약이 있을 수 있으니 그때 다시 확인할 것.
+
+## 모노레포를 단일 패키지로 되돌림
+
+**발생일** 2026-08-27 · [#32](https://github.com/meins-lab/image-blur/issues/32)
+
+**배경**
+`apps/` 아래에 여러 서비스를 두려던 계획이 바뀌었다.
+조직을 만들면서 **서비스를 저장소 단위로 나누기로** 했다.
+
+**무엇이 필요 없어졌나**
+아래는 전부 "앱이 여러 개"라는 전제에서 나온 장치다. 서비스가 하나면 하는 일이 없다.
+
+```
+Yarn workspaces
+Vercel Root Directory
+scripts/vercel-ignore-build.sh
+apps/ · libs/ 계층
+AGENTS.md 2층 구조
+ESLint files 범위 지정
+```
+
+**libs를 어떻게 했나**
+파일 10개(styles 7, components 3)라 `src/` 안으로 흡수했다.
+`libs/styles/src` 와 앱의 `src/style` 이 이름만 다르고 역할이 겹쳐 `src/styles` 로 합쳤다.
+임포트는 세 곳뿐이라 `@meins/*` → `src/*` 로 바꾸면 끝났다.
+
+별도 저장소로 분리해 패키지로 배포하는 방법도 있지만,
+파일 10개에 버전 관리와 배포 파이프라인을 붙이는 건 과하다.
+두 번째 서비스가 실제로 같은 토큰을 쓸 때 올리면 된다.
+
+**Vercel에서 되돌린 것**
+```
+Root Directory      apps/image-blur → (비움, 저장소 루트)
+outputDirectory     dist            (vercel.json이 루트로 돌아왔다)
+ignoreCommand       제거
+```
+
+`ENABLE_EXPERIMENTAL_COREPACK` 은 그대로 둔다.
+`workspace:` 프로토콜은 없어졌지만 `packageManager: yarn@4` 를 쓰는 한 Corepack이 필요하다.
+
+**다음에 볼 것**
+구조를 먼저 정하고 서비스를 만들면 이런 되돌리기가 생긴다.
+서비스가 둘이 되기 전까지는 단일 패키지로 두고, 실제로 둘이 될 때 나누는 편이 싸다.
+
+## Corepack과 Vite가 `type: module`을 두고 충돌한다
+
+**발생일** 2026-08-27 · [#32](https://github.com/meins-lab/image-blur/issues/32)
+
+**증상**
+단일 패키지로 합친 뒤 Vercel 빌드가 깨졌다.
+
+```
+Error: Dynamic require of "util" is not supported
+Error: Command "yarn install" exited with 1
+```
+
+`type: module`을 빼면 이번엔 로컬 빌드가 깨진다.
+
+```
+"@vitejs/plugin-react-swc" resolved to an ESM file.
+ESM file cannot be loaded by `require`.
+```
+
+**원인**
+둘이 서로 반대를 요구한다.
+
+| | 요구 |
+|---|---|
+| Corepack | `type: module`이 **없어야** 한다. 캐시된 `yarn.js`가 CJS인데 ESM으로 해석돼 죽는다 |
+| Vite 설정 로딩 | `vite.config.ts`를 ESM으로 읽어야 한다. 플러그인이 ESM 전용이다 |
+
+모노레포일 때는 우연히 해결돼 있었다. 루트 `package.json`에는 `type`이 없고
+`apps/image-blur/package.json`에만 있어서, Corepack은 루트를 보고 Vite는 앱을 봤다.
+`package.json`이 하나로 합쳐지면서 충돌이 드러났다.
+
+**해결**
+`type: module`을 빼고 설정 파일 확장자로 ESM을 지정한다.
+
+```
+vite.config.ts → vite.config.mts
+```
+
+`.mts`는 `type` 설정과 무관하게 항상 ESM으로 읽힌다.
+`tsconfig.node.json`의 `include`와 ESLint의 `files` 패턴도 같이 바꿔야 한다.
+
+**다음에 볼 것**
+`Dynamic require of "util" is not supported`가 보이면 `package.json`의 `type` 필드를 먼저 본다.
+Vercel이 빌드 로그 맨 위에 경고로 알려주기도 한다.
+`yarnPath`를 쓰는 방법도 있지만 Yarn 릴리스 파일을 저장소에 넣어야 해서 더 무겁다.

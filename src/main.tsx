@@ -3,16 +3,15 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
 import { Global } from '@emotion/react';
-import { SnackbarProvider } from '@meins/components';
-import { meinsDesignSystemTheme } from '@meins/styles';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { SnackbarProvider } from 'src/components';
+import { designSystemTheme, globalStyles } from 'src/styles';
 
 import { router } from './router';
-import { globalStyles } from './style/global';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={meinsDesignSystemTheme}>
+    <ThemeProvider theme={designSystemTheme}>
       <CssBaseline />
       <Global styles={globalStyles} />
       <SnackbarProvider>

@@ -16,14 +16,13 @@ const nodeModules = join(root, 'node_modules');
 const LICENSE_FILE_PATTERN = /^(LICENSE|LICENCE|COPYING)(\..*)?$/i;
 
 function collectProductionPackages() {
-  const appPkg = JSON.parse(readFileSync(join(root, 'apps/image-blur/package.json'), 'utf8'));
+  const appPkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   const queue = Object.keys(appPkg.dependencies ?? {});
   const seen = new Set();
 
   while (queue.length > 0) {
     const name = queue.shift();
-    // 워크스페이스 내부 패키지는 우리 코드라 고지 대상이 아니다
-    if (seen.has(name) || name.startsWith('@meins/')) {
+    if (seen.has(name)) {
       continue;
     }
     seen.add(name);
@@ -109,7 +108,7 @@ const packages = collectProductionPackages()
   .filter(Boolean);
 
 const missing = packages.filter(pkg => !pkg.licenseText);
-const output = join(root, 'apps/image-blur/src/features/Licenses/data/licenses.json');
+const output = join(root, 'src/features/Licenses/data/licenses.json');
 writeFileSync(output, `${JSON.stringify(packages, null, 2)}\n`);
 
 console.log(`패키지 ${packages.length}개 수집`);

@@ -3,7 +3,6 @@
   "buildCommand": "yarn build",
   "outputDirectory": "dist",
   "framework": null,
-  "ignoreCommand": "bash ../../scripts/vercel-ignore-build.sh apps/image-blur",
   "rewrites": [
     {
       "source": "/((?!assets/|_vercel/).*)",
