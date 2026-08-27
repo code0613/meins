@@ -98,6 +98,20 @@ export function BuyMeCoffeeButton() {
                     maxWidth: '100%',
                     lineHeight: 0,
                     borderRadius: '8px',
+                    cursor: 'pointer',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    outlineOffset: '4px',
+                    transition: 'transform 120ms ease, box-shadow 120ms ease',
+                    '@media (hover: hover)': {
+                      '&:hover': {
+                        boxShadow: '0 6px 18px color-mix(in oklab, var(--foreground) 16%, transparent)',
+                      },
+                    },
+                    '&:active': {
+                      transform: 'scale(0.96)',
+                      boxShadow: '0 2px 6px color-mix(in oklab, var(--foreground) 12%, transparent)',
+                    },
                   }}
                 >
                   <Box
