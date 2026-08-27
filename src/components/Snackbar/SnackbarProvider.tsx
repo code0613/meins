@@ -1,6 +1,6 @@
-import { SLATE } from '@meins/styles';
 import { styled } from '@mui/material';
 import { MaterialDesignContent, SnackbarProvider as NotistackSnackbarProvider, type SnackbarProviderProps } from 'notistack';
+import { SLATE } from 'src/styles';
 
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ theme }) => ({
   boxShadow: theme.shadows[8],

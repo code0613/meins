@@ -1,5 +1,6 @@
-import type { Palette, PaletteColor, PaletteOptions } from '@mui/material';
 import type React from 'react';
+
+import type { Palette, PaletteColor, PaletteOptions } from '@mui/material';
 
 declare module '@mui/material/styles' {
   interface TypographyVariants {

@@ -78,7 +78,7 @@ const typographyTheme: ThemeOptions['typography'] = {
   label3: LABEL_TYPOGRAPHY.S,
 };
 
-export const meinsDesignSystemTheme = createTheme({
+export const designSystemTheme = createTheme({
   palette: paletteTheme,
   typography: typographyTheme,
   shape: { borderRadius: 12 },
