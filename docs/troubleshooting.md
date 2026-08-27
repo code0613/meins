@@ -44,7 +44,7 @@ vercel api "v9/projects/<projectId>?teamId=<teamId>"
 
 ## Vercel: type module 선언이 Corepack의 yarn 실행을 깨뜨린다
 
-**발생일** 2026-08-26 · [#5](https://github.com/code0613/meins/issues/5)
+**발생일** 2026-08-26 · [#5](https://github.com/meins-lab/meins/issues/5)
 
 **증상**
 ```
@@ -75,7 +75,7 @@ CommonJS인 Yarn이 ESM으로 해석되면서 내부 `require()`가 실패한다
 
 ## Vercel: Yarn 1으로 설치해 workspace 프로토콜을 못 읽는다
 
-**발생일** 2026-08-26 · [#3](https://github.com/code0613/meins/issues/3)
+**발생일** 2026-08-26 · [#3](https://github.com/meins-lab/meins/issues/3)
 
 **증상**
 ```
@@ -106,7 +106,7 @@ echo "1" | vercel env add ENABLE_EXPERIMENTAL_COREPACK production
 
 ## Vercel: 배포 설정이 레포 루트에 있으면 앱을 더 못 붙인다
 
-**발생일** 2026-08-27 · [#23](https://github.com/code0613/meins/issues/23)
+**발생일** 2026-08-27 · [#23](https://github.com/meins-lab/meins/issues/23)
 
 **증상**
 증상이 나기 전에 구조로 먼저 막힌 경우다.
@@ -147,3 +147,42 @@ Yarn 워크스페이스가 잡히면 Vercel이 알아서 켜주는 것으로 보
 **다음에 볼 것**
 배포 로그 맨 위의 `Running "bash ../../scripts/..."` 줄과 그 다음 줄을 본다.
 건너뛴 배포는 로그가 거기서 끝난다.
+
+## 저장소를 조직으로 이관했을 때 확인할 것
+
+**발생일** 2026-08-27
+
+**증상**
+개인 계정에서 조직으로 저장소를 옮기면 Vercel 배포가 멈춘다.
+
+```
+To link a GitHub repository, you need to install the GitHub integration first.
+```
+
+**원인**
+GitHub 이관 자체는 깔끔하다. 옛 URL이 리다이렉트되고 코드·이슈·PR·라벨·마일스톤·
+브랜치 보호·Actions 실행 이력까지 그대로 따라온다. GitHub 저장소 ID도 바뀌지 않는다.
+
+문제는 Vercel이 GitHub App 설치를 기준으로 접근 권한을 판단한다는 점이다.
+앱이 개인 계정에만 설치돼 있으면 새 조직의 저장소를 못 읽는다.
+
+**해결**
+Vercel GitHub App을 조직에 설치하고 저장소 접근을 허용한다.
+<https://github.com/apps/vercel/installations/select_target>
+
+그다음 Vercel 프로젝트의 Git 연결을 새 경로로 바꾼다.
+**프로젝트를 새로 만들지 말 것.** 새로 만들면 Web Analytics 데이터, 환경변수,
+Root Directory, 프로덕션 도메인이 전부 초기화된다. Git 연결만 갈아끼우면 유지된다.
+
+**다음에 볼 것**
+이관 후 확인 순서.
+
+```
+git remote set-url origin <새 주소>
+브랜치 보호와 required status check 가 남아 있는지
+Vercel 프로젝트의 Root Directory 와 환경변수가 그대로인지
+테스트 커밋 하나로 CI 와 배포가 도는지
+```
+
+public 저장소라 Free 조직에서도 브랜치 보호가 유지됐다.
+private 저장소는 Free 조직에서 제약이 있을 수 있으니 그때 다시 확인할 것.
