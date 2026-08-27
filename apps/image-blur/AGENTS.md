@@ -22,8 +22,10 @@ fetch  XMLHttpRequest  WebSocket  navigator.sendBeacon  EventSource
 에러 리포팅, 원격 로깅, 외부 폰트, CDN, 이미지 최적화 API 전부 해당됩니다.
 좋은 의도로 추가하기 쉬운 것들이라 특히 조심하세요.
 
-배포본 CSP 가 `connect-src 'self'` 라 브라우저가 막아주지만,
-**코드 단계에서 먼저 막아야 합니다.** CSP 는 마지막 방어선입니다.
+ESLint 가 이 앱 안에서만 위 API 를 막습니다(`eslint.config.mjs`). CI 에서도 검사합니다.
+배포본 CSP 는 `connect-src 'self'` 로 마지막 방어선을 겁니다.
+
+**이 제약은 `apps/image-blur/**` 에만 걸립니다.** 저장소 전체로 넓히지 마세요.
 
 ### 예외: 방문 통계
 
