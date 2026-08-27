@@ -71,28 +71,16 @@ export function BuyMeCoffeeButton() {
             Buy Me A Coffee ☕
           </Typography>
 
-          <Stack direction="row" spacing="16px" justifyContent="center">
-            {DONATION_METHODS.map(method => (
-              <Stack key={method.id} spacing="14px" alignItems="center" sx={{ flex: 1 }}>
-                <Box
-                  sx={{
-                    px: '14px',
-                    py: '6px',
-                    borderRadius: '8px',
-                    bgcolor: method.brandColor,
-                  }}
-                >
-                  <Typography variant="label2" sx={{ color: method.labelColor }}>
-                    {method.label}
-                  </Typography>
-                </Box>
-
+          <Stack direction="row" spacing="16px" justifyContent="center" alignItems="flex-start">
+            {DONATION_METHODS.map(method => {
+              const qrImage = (
                 <Box
                   component="img"
                   src={method.qrSrc}
                   alt={`${method.label} 송금 QR 코드`}
                   loading="lazy"
                   sx={{
+                    display: 'block',
                     width: '100%',
                     maxWidth: '160px',
                     aspectRatio: '1 / 1',
@@ -101,8 +89,57 @@ export function BuyMeCoffeeButton() {
                     bgcolor: '#FFFFFF',
                   }}
                 />
-              </Stack>
-            ))}
+              );
+
+              return (
+                <Stack key={method.id} spacing="14px" alignItems="center" sx={{ flex: 1 }}>
+                  <Box
+                    sx={{
+                      px: '14px',
+                      py: '6px',
+                      borderRadius: '8px',
+                      bgcolor: method.brandColor,
+                    }}
+                  >
+                    <Typography variant="label2" sx={{ color: method.labelColor }}>
+                      {method.label}
+                    </Typography>
+                  </Box>
+
+                  {method.linkUrl ? (
+                    <Box
+                      component="a"
+                      href={method.linkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        display: 'block',
+                        width: '100%',
+                        maxWidth: '160px',
+                        lineHeight: 0,
+                        borderRadius: '8px',
+                      }}
+                    >
+                      {qrImage}
+                    </Box>
+                  ) : (
+                    qrImage
+                  )}
+
+                  {method.linkUrl && (
+                    <Typography
+                      variant="body4"
+                      sx={{
+                        textAlign: 'center',
+                        color: 'var(--primary)',
+                      }}
+                    >
+                      탭하면 앱이 열려요
+                    </Typography>
+                  )}
+                </Stack>
+              );
+            })}
           </Stack>
 
           <Stack spacing="4px" sx={{ mt: '24px' }}>
