@@ -4,8 +4,7 @@ interface DonationMethod {
   qrSrc: string;
   brandColor: string;
   labelColor: string;
-  /** HTTPS 링크가 있는 수단만 탭으로 앱을 열 수 있다. 토스는 커스텀 스킴뿐이라 없다 */
-  linkUrl?: string;
+  linkUrl: string;
 }
 
 export const DONATION_METHODS: DonationMethod[] = [
@@ -16,12 +15,5 @@ export const DONATION_METHODS: DonationMethod[] = [
     brandColor: '#FEE500',
     labelColor: '#191600',
     linkUrl: 'https://qr.kakaopay.com/281006011000092640873420',
-  },
-  {
-    id: 'toss',
-    label: '토스',
-    qrSrc: '/toss.png',
-    brandColor: '#3182F6',
-    labelColor: '#FFFFFF',
   },
 ];

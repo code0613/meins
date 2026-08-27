@@ -72,74 +72,51 @@ export function BuyMeCoffeeButton() {
           </Typography>
 
           <Stack direction="row" spacing="16px" justifyContent="center" alignItems="flex-start">
-            {DONATION_METHODS.map(method => {
-              const qrImage = (
+            {DONATION_METHODS.map(method => (
+              <Stack key={method.id} spacing="14px" alignItems="center">
                 <Box
-                  component="img"
-                  src={method.qrSrc}
-                  alt={`${method.label} 송금 QR 코드`}
-                  loading="lazy"
+                  sx={{
+                    px: '14px',
+                    py: '6px',
+                    borderRadius: '8px',
+                    bgcolor: method.brandColor,
+                  }}
+                >
+                  <Typography variant="label2" sx={{ color: method.labelColor }}>
+                    {method.label}
+                  </Typography>
+                </Box>
+
+                <Box
+                  component="a"
+                  href={method.linkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   sx={{
                     display: 'block',
-                    width: '100%',
-                    maxWidth: '160px',
-                    aspectRatio: '1 / 1',
-                    objectFit: 'contain',
+                    width: '180px',
+                    maxWidth: '100%',
+                    lineHeight: 0,
                     borderRadius: '8px',
-                    bgcolor: '#FFFFFF',
                   }}
-                />
-              );
-
-              return (
-                <Stack key={method.id} spacing="14px" alignItems="center" sx={{ flex: 1 }}>
+                >
                   <Box
+                    component="img"
+                    src={method.qrSrc}
+                    alt={`${method.label} 송금 QR 코드`}
+                    loading="lazy"
                     sx={{
-                      px: '14px',
-                      py: '6px',
+                      display: 'block',
+                      width: '100%',
+                      aspectRatio: '1 / 1',
+                      objectFit: 'contain',
                       borderRadius: '8px',
-                      bgcolor: method.brandColor,
+                      bgcolor: '#FFFFFF',
                     }}
-                  >
-                    <Typography variant="label2" sx={{ color: method.labelColor }}>
-                      {method.label}
-                    </Typography>
-                  </Box>
-
-                  {method.linkUrl ? (
-                    <Box
-                      component="a"
-                      href={method.linkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{
-                        display: 'block',
-                        width: '100%',
-                        maxWidth: '160px',
-                        lineHeight: 0,
-                        borderRadius: '8px',
-                      }}
-                    >
-                      {qrImage}
-                    </Box>
-                  ) : (
-                    qrImage
-                  )}
-
-                  {method.linkUrl && (
-                    <Typography
-                      variant="body4"
-                      sx={{
-                        textAlign: 'center',
-                        color: 'var(--primary)',
-                      }}
-                    >
-                      탭하면 앱이 열려요
-                    </Typography>
-                  )}
-                </Stack>
-              );
-            })}
+                  />
+                </Box>
+              </Stack>
+            ))}
           </Stack>
 
           <Stack spacing="4px" sx={{ mt: '24px' }}>
@@ -151,7 +128,7 @@ export function BuyMeCoffeeButton() {
                 color: 'var(--muted-foreground)',
               }}
             >
-              QR을 찍으면 송금 화면이 열려요. 안 보내셔도 괜찮아요.
+              QR을 탭하거나 찍으면 카카오페이가 열려요. 안 보내셔도 괜찮아요.
             </Typography>
             <Typography
               variant="body4"
