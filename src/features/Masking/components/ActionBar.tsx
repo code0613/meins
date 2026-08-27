@@ -12,6 +12,17 @@ interface ActionBarProps {
   onDownload: () => void;
 }
 
+/** 좁은 화면에서 3등분하면 '전체 지우기'가 개행된다. 보조 버튼 둘이 한 줄, 저장하기는 아래 한 줄 */
+const secondarySx = {
+  flex: { xs: '1 1 calc(50% - 4px)', md: '0 0 auto' },
+  whiteSpace: 'nowrap',
+} as const;
+
+const primarySx = {
+  flex: { xs: '1 1 100%', md: '0 0 auto' },
+  whiteSpace: 'nowrap',
+} as const;
+
 export function ActionBar({ canUndo, onUndo, onReset, onDownload }: ActionBarProps) {
   return (
     <Box
@@ -36,7 +47,7 @@ export function ActionBar({ canUndo, onUndo, onReset, onDownload }: ActionBarPro
         disabled={!canUndo}
         onClick={onUndo}
         title={`되돌리기 (${UNDO_SHORTCUT_LABEL})`}
-        sx={{ flex: { xs: 1, md: 'none' } }}
+        sx={secondarySx}
       >
         되돌리기
       </Button>
@@ -45,7 +56,7 @@ export function ActionBar({ canUndo, onUndo, onReset, onDownload }: ActionBarPro
         color="inherit"
         startIcon={<RestartAltIcon />}
         onClick={onReset}
-        sx={{ flex: { xs: 1, md: 'none' } }}
+        sx={secondarySx}
       >
         전체 지우기
       </Button>
@@ -54,7 +65,7 @@ export function ActionBar({ canUndo, onUndo, onReset, onDownload }: ActionBarPro
         color="secondary"
         startIcon={<DownloadIcon />}
         onClick={onDownload}
-        sx={{ flex: { xs: 1, md: 'none' } }}
+        sx={primarySx}
       >
         저장하기
       </Button>
